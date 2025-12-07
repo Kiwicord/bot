@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "cmd": "tsx deploy-commands.ts",
     "dev": "tsx watch index.ts"
   },
   "dependencies": {
