@@ -1,8 +1,10 @@
 import {
-  ChannelType,
-  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   Events,
   MessageFlags,
+  TextDisplayBuilder,
   type GuildTextBasedChannel,
   type Interaction,
 } from "discord.js";
@@ -25,18 +27,38 @@ export default {
       "partner_description"
     );
 
+    const msg = new TextDisplayBuilder().setContent(
+      `Neues Partner-Formular von <@${interaction.user.id}>\n` +
+        `Server: ${name}\nBeschreibung: ${description}\nInvite Link: ${link}`
+    );
+
+    const acceptButton = new ButtonBuilder()
+      .setEmoji("✅")
+      .setLabel("Annehmen")
+      .setStyle(ButtonStyle.Success)
+      .setCustomId(`partner_accept:${interaction.user.id}`);
+
+    const declineButton = new ButtonBuilder()
+      .setEmoji("❌")
+      .setLabel("Ablehnen")
+      .setStyle(ButtonStyle.Danger)
+      .setCustomId(`partner_decline:${interaction.user.id}`);
+
+    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+      acceptButton,
+      declineButton
+    );
+
     if (channel) {
       await channel.send({
-        content: `Neues Partner-Formular von <@${interaction.user.id}>`,
-        embeds: [
-          new EmbedBuilder()
-            .setColor(0x77dd77)
-            .addFields({ name: "Server", value: name })
-            .addFields({ name: "Beschreibung", value: description })
-            .addFields({ name: "Invite Link", value: link }),
-        ],
+        flags: MessageFlags.IsComponentsV2,
+        components: [msg, row],
       });
-      await interaction.reply({ content: "Deine Anfrage wurde erstellt. Innerhalb von max. 24 Stunden bekommst du eine Rückmeldung", flags: MessageFlags.Ephemeral });
+      await interaction.reply({
+        content:
+          "Deine Anfrage wurde erstellt. Innerhalb von max. 24 Stunden bekommst du eine Rückmeldung",
+        flags: MessageFlags.Ephemeral,
+      });
     }
   },
 } as IEvent;
