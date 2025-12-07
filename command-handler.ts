@@ -9,6 +9,7 @@ interface CommandHandlerParams {
   applicationId: string;
   guildId: string;
   client: Client;
+  interactionInterceptor?: (interaction: Interaction) => void;
 }
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,6 +23,7 @@ export default class CommandHandler {
   private applicationId;
   private guildId;
   private client;
+  private interactionInterceptor;
 
   constructor({
     token,
@@ -29,6 +31,7 @@ export default class CommandHandler {
     applicationId,
     guildId,
     client,
+    interactionInterceptor,
   }: CommandHandlerParams) {
     this.foldersPath = path.join(__dirname, commandsPath);
     this.commandFolders = fs.readdirSync(this.foldersPath);
@@ -37,6 +40,7 @@ export default class CommandHandler {
     this.applicationId = applicationId;
     this.guildId = guildId;
     this.client = client;
+    this.interactionInterceptor = interactionInterceptor;
 
     this.init();
 
@@ -96,6 +100,7 @@ export default class CommandHandler {
     }
 
     try {
+      if (this.interactionInterceptor) this.interactionInterceptor(interaction);
       await command.callback(interaction);
     } catch (error) {
       console.error(error);
