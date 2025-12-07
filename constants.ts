@@ -5,9 +5,15 @@ export const emoji = {
   LINE_2: "<:kc_strich2:1055843970753769532>",
   LINE_3: "<:kc_strich3:1055843972267900988>",
   TADA: "<a:tada:913065338583781458>",
+  THINK: "<:kiwi_hmm:934449824059768872>",
 };
 
 export const color = {
   PASTELL_GREEN: 0x77dd77,
   PASTELL_RED: 0xff746c,
+};
+
+export const channel = {
+  FLAG_QUIZ: "845246664494284832",
+  PARTNER_REQUEST: "1447302588440645836",
 };

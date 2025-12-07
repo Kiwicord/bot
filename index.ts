@@ -5,7 +5,12 @@ import connectDB from "./db/connectDB.js";
 import User from "./db/schema/User.js";
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMessages,
+  ],
 });
 
 const token = process.env.BOT_TOKEN!;
