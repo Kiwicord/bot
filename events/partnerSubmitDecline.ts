@@ -4,6 +4,7 @@ import {
   MessageFlags,
   type Interaction,
 } from "discord.js";
+import { color, emoji } from "../constants.js";
 
 export default {
   event: Events.InteractionCreate,
@@ -42,11 +43,11 @@ export default {
     }
 
     const embed = new EmbedBuilder()
-      .setColor(action === "partner_accept" ? 0x77dd77 : 0xff746c)
+      .setColor(action === "partner_accept" ? color.PASTELL_GREEN : color.PASTELL_RED)
       .setTitle(
         `${
           action === "partner_accept"
-            ? "<a:tada:913065338583781458>"
+            ? emoji.TADA
             : "<a:wumpus_spam:863831295850184745>"
         } Deine Partneranfrage auf Kiwicord`
       )

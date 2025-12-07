@@ -5,6 +5,7 @@ import {
   type CommandInteraction,
 } from "discord.js";
 import { format } from "date-fns";
+import { color, emoji } from "../../constants.js";
 
 export default {
   name: "Statistic",
@@ -16,13 +17,6 @@ export default {
 
     const getChannelCount = (type: ChannelType) => {
       return channels?.filter((channel) => channel?.type === type).size;
-    };
-
-    const emoji = {
-      DOT: "<:kc_punkt:1440369092283470006>",
-      LINE_1: "<:kc_strich1:1055843946342907954>",
-      LINE_2: "<:kc_strich2:1055843970753769532>",
-      LINE_3: "<:kc_strich3:1055843972267900988>",
     };
 
     const stats = {
@@ -73,7 +67,7 @@ export default {
       // content: `${members?.map((item) => item)?.join(",")}`,
       embeds: [
         new EmbedBuilder()
-          .setColor(0x77dd77)
+          .setColor(color.PASTELL_GREEN)
           .setTitle("Kiwicord Statistik")
           .setFields(fields)
           .setFooter({
