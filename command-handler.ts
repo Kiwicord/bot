@@ -1,0 +1,123 @@
+import { Client, Events, REST, Routes, type Interaction } from "discord.js";
+import path from "node:path";
+import fs from "node:fs";
+import { fileURLToPath, pathToFileURL } from "node:url";
+
+interface CommandHandlerParams {
+  token: string;
+  commandsPath: string;
+  applicationId: string;
+  guildId: string;
+  client: Client;
+}
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default class CommandHandler {
+  private foldersPath;
+  private commandFolders;
+  private commands: Command[];
+  private rest;
+  private applicationId;
+  private guildId;
+  private client;
+
+  constructor({
+    token,
+    commandsPath,
+    applicationId,
+    guildId,
+    client,
+  }: CommandHandlerParams) {
+    this.foldersPath = path.join(__dirname, commandsPath);
+    this.commandFolders = fs.readdirSync(this.foldersPath);
+    this.commands = [];
+    this.rest = new REST().setToken(token);
+    this.applicationId = applicationId;
+    this.guildId = guildId;
+    this.client = client;
+
+    this.init();
+
+    this.client.on(Events.InteractionCreate, async (interaction) => {
+      await this.handleInteraction(interaction);
+    });
+  }
+
+  private async init() {
+    await this.load();
+    await this.deploy();
+  }
+
+  private async load() {
+    for (const folder of this.commandFolders) {
+      const commandsPath = path.join(this.foldersPath, folder);
+      const commandFiles = fs
+        .readdirSync(commandsPath)
+        .filter((file) => file.endsWith(".ts"));
+
+      for (const file of commandFiles) {
+        const filePath = path.join(commandsPath, file);
+        const command = await import(pathToFileURL(filePath).href);
+        this.commands.push(command.default);
+      }
+    }
+  }
+
+  private async deploy() {
+    try {
+      const body = this.commands.map((command) => this.parseCommand(command));
+      const data = await this.rest.put(
+        Routes.applicationGuildCommands(this.applicationId, this.guildId),
+        {
+          body,
+        }
+      );
+      // @ts-ignore
+      console.log(`loaded ${data.length} commands`);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
+
+  private async handleInteraction(interaction: Interaction) {
+    if (!interaction.isCommand()) return;
+
+    const command = this.commands.find(
+      (cmd) => cmd.name.toLowerCase() === interaction.commandName.toLowerCase()
+    );
+    if (!command) {
+      await interaction.reply({
+        content: "Command not found.",
+        ephemeral: true,
+      });
+      return;
+    }
+
+    try {
+      await command.callback(interaction);
+    } catch (error) {
+      console.error(error);
+      if (!interaction.replied) {
+        await interaction.reply({
+          content: "There was an error executing this command.",
+          ephemeral: true,
+        });
+      }
+    }
+  }
+
+  private parseCommand(command: Command) {
+    return {
+      name: command.name.toLowerCase(),
+      description: command.description,
+      options: command.options?.map((opt) => ({
+        name: opt.name.toLowerCase(),
+        description: opt.description,
+        type: opt.type,
+        required: opt.required ?? false,
+      })),
+    };
+  }
+}
