@@ -11,3 +11,9 @@ interface Command {
   callback: (interaction: CommandInteraction) => void;
   options?: Option[];
 }
+
+interface IEvent {
+  event: Events,
+  once: boolean,
+  callback: (event: Interaction, listener: (...args: any) => void) => void
+}

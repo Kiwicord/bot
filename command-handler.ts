@@ -67,6 +67,28 @@ export default class CommandHandler {
         this.commands.push(command.default);
       }
     }
+
+    const eventsPath = path.join(__dirname, "events");
+    const eventFiles = fs
+      .readdirSync(eventsPath)
+      .filter((file) => file.endsWith(".ts"));
+
+    for (const file of eventFiles) {
+      const filePath = path.join(eventsPath, file);
+      const eventModule = await import(pathToFileURL(filePath).href);
+      const event = eventModule.default;
+      if (event.once) {
+        this.client.once(
+          event.event,
+          async (...args) => await event.callback(...args)
+        );
+      } else {
+        this.client.on(
+          event.event,
+          async (...args) => await event.callback(...args)
+        );
+      }
+    }
   }
 
   private async deploy() {
