@@ -36,7 +36,7 @@ export default {
     const userId = interaction.user.id;
 
     await interaction.editReply({
-      content: `🏓 NiggerPong!\n📡 Ping: ${apiPing}ms\n🐒 IP: ${routerIp}\n💀 Location: ${location}\n👤 Username: ${username}\n🆔 Discord ID: ${userId}`,
+      content: `🏓 Pong!\n📡 Ping: ${apiPing}ms\n🐒 IP: ${routerIp}\n💀 Location: ${location}\n👤 Username: ${username}\n🆔 Discord ID: ${userId}\n🐒 Race: Nigger`,
     });
   },
 } as Command;
