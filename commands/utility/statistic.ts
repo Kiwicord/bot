@@ -1,6 +1,7 @@
 import {
   ChannelType,
   EmbedBuilder,
+  PermissionsBitField,
   type APIEmbedField,
   type CommandInteraction,
 } from "discord.js";
@@ -10,6 +11,7 @@ import { color, emoji } from "../../constants.js";
 export default {
   name: "Statistic",
   description: "Erstellt eine Server Statistik",
+  permissions: PermissionsBitField.Flags.Administrator,
   callback: async (interaction: CommandInteraction) => {
     const guild = interaction?.guild;
     const channels = await guild?.channels?.fetch();

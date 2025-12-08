@@ -145,6 +145,9 @@ export default class CommandHandler {
         type: opt.type,
         required: opt.required ?? false,
       })),
+      default_member_permissions: command.permissions
+        ? command.permissions.toString()
+        : null,
     };
   }
 }

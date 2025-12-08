@@ -3,6 +3,7 @@ import {
   ButtonBuilder,
   ButtonStyle,
   MessageFlags,
+  PermissionsBitField,
   TextDisplayBuilder,
   type CommandInteraction,
 } from "discord.js";
@@ -10,6 +11,7 @@ import {
 export default {
   name: "partner",
   description: "partner",
+  permissions: PermissionsBitField.Flags.Administrator,
   callback: async (interaction: CommandInteraction) => {
     const button = new ButtonBuilder()
       .setEmoji("🤝")

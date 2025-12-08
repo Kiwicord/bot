@@ -10,10 +10,11 @@ interface Command {
   description: string;
   callback: (interaction: CommandInteraction) => void;
   options?: Option[];
+  permissions?: bigint;
 }
 
 interface IEvent {
-  event: Events,
-  once: boolean,
-  callback: (event: Interaction, listener: (...args: any) => void) => void
+  event: Events;
+  once: boolean;
+  callback: (event: Interaction, listener: (...args: any) => void) => void;
 }

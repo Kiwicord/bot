@@ -7,6 +7,7 @@ import {
   CommandInteraction,
   ComponentType,
   EmbedBuilder,
+  PermissionsBitField,
   TextChannel,
 } from "discord.js";
 import { color, emoji } from "../../constants.js";
@@ -15,6 +16,7 @@ import User from "../../db/schema/User.js";
 export default {
   name: "flag",
   description: "Startet ein Flaggen Quiz",
+  permissions: PermissionsBitField.Flags.Administrator,
   callback: async (interaction: CommandInteraction) => {
     const channel = interaction.channel as TextChannel;
 
@@ -90,7 +92,7 @@ export default {
           .setDescription(
             `Du hast die Flagge richtig erraten und dafür **${AMOUNT}**🥝 verdient!`
           );
-          
+
         msg.reply({
           embeds: [embed],
         });

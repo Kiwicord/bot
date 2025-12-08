@@ -1,8 +1,9 @@
-import type { CommandInteraction } from "discord.js";
+import { PermissionsBitField, type CommandInteraction } from "discord.js";
 
 export default {
   name: "Ping",
   description: "Replies with Pong",
+  permissions: PermissionsBitField.Flags.Administrator,
   callback: async (interaction: CommandInteraction) => {
     const sent = await interaction.reply({
       content: "Pinging...",
