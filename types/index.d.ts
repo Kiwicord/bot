@@ -1,7 +1,7 @@
 interface Option {
   name: string;
   description: string;
-  type: string;
+  type: ApplicationCommandOptionType;
   required: boolean;
 }
 

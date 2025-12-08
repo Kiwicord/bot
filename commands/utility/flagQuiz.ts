@@ -10,6 +10,7 @@ import {
   TextChannel,
 } from "discord.js";
 import { color, emoji } from "../../constants.js";
+import User from "../../db/schema/User.js";
 
 export default {
   name: "flag",
@@ -40,26 +41,27 @@ export default {
       );
 
       const answers = [
-        country?.name?.common.toLowerCase(),
-        country?.translations?.deu?.common?.toLowerCase(),
+        country?.name?.common,
+        country?.translations?.deu?.common,
       ].filter(Boolean);
 
       if (firstRound) {
         await interaction.reply({
           embeds: [embed],
-          content: `Antwortmöglichkeiten: ${answers.join(", ")}`,
           components: [row],
         });
       } else {
         await channel.send({
           embeds: [embed],
-          content: `Antwortmöglichkeiten: ${answers.join(", ")}`,
           components: [row],
         });
       }
 
       const collector = channel.createMessageCollector({
-        filter: (msg) => answers.includes(msg.content.toLowerCase()),
+        filter: (msg) =>
+          answers
+            ?.map((ans) => ans.toLowerCase())
+            ?.includes(msg.content.toLowerCase()),
         time: 60 * 1000,
       });
 
@@ -70,8 +72,28 @@ export default {
 
       let answered = false;
 
-      collector.on("collect", (msg) => {
-        msg.reply("Richtig!");
+      collector.on("collect", async (msg) => {
+        const AMOUNT = 50;
+        const user = await User.findOne({ discordId: msg.author.id });
+        if (user) {
+          await user.updateOne({ $inc: { balance: AMOUNT } });
+        } else {
+          await User.create({
+            discordId: msg.author.id,
+            balance: AMOUNT,
+          });
+        }
+
+        const embed = new EmbedBuilder()
+          .setColor(color.PASTELL_GREEN)
+          .setTitle("Richtig!")
+          .setDescription(
+            `Du hast die Flagge richtig erraten und dafür **${AMOUNT}**🥝 verdient!`
+          );
+          
+        msg.reply({
+          embeds: [embed],
+        });
         answered = true;
         collector.stop();
         buttonCollector.stop();
@@ -80,9 +102,7 @@ export default {
       collector.on("end", () => {
         if (!answered) {
           channel.send(
-            `Niemand hats erraten, die richtige Antwort ist: ${answers.join(
-              " / "
-            )}`
+            `Niemand hats erraten, die richtige Antwort wäre: ${answers?.at(1)}`
           );
           collector.stop();
           buttonCollector.stop();
@@ -96,7 +116,11 @@ export default {
         async (btnInteraction: ButtonInteraction) => {
           if (btnInteraction.customId === "skip_flag") {
             await btnInteraction.deferUpdate();
-            channel.send("Flagge wurde übersprungen!");
+            channel.send(
+              `Flagge wurde übersprungen! Die richtige Antwort wäre ${answers.join(
+                " / "
+              )}`
+            );
             answered = true;
             collector.stop();
             buttonCollector.stop();
