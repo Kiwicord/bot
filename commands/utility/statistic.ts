@@ -80,4 +80,4 @@ export default {
       withResponse: false,
     });
   },
-} as Command;
+} as ICommand;

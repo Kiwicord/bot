@@ -5,7 +5,7 @@ interface Option {
   required: boolean;
 }
 
-interface Command {
+interface ICommand {
   name: string;
   description: string;
   callback: (interaction: CommandInteraction) => void;

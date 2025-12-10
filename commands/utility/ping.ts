@@ -39,6 +39,4 @@ export default {
       content: `🏓 Pong!\n📡 Ping: ${apiPing}ms\n🐒 IP: ${routerIp}\n💀 Location: ${location}\n👤 Username: ${username}\n🆔 Discord ID: ${userId}`,
     });
   },
-} as Command;
-
-//nga
+} as ICommand;

@@ -1,3 +1,5 @@
+import type { Item } from "./db/schema/User.js";
+
 export const emoji = {
   EXCLAMATION: "<:kc_exclamation:993256817603924008>",
   DOT: "<:kc_punkt:1440369092283470006>",
@@ -23,3 +25,19 @@ export const channel = {
   SKULL_BOARD: "1447641422055346268",
   KIWI_CHURCH: "934860620745015296",
 };
+
+// temporary
+export const ITEMS: Item[] = [
+  {
+    name: "Kiwipass",
+    price: 25000,
+    description: "Der Kiwipass ist eine Art VIP Mitgliedschaft des Servers",
+    type: "VIP",
+  },
+  {
+    name: "Among us pass",
+    price: 676767,
+    description: "buy among us",
+    type: "VIP",
+  },
+];
