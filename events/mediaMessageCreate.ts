@@ -1,6 +1,7 @@
 import { EmbedBuilder, Events, Message } from "discord.js";
 import { channel, color, emoji } from "../constants.js";
 import User from "../db/schema/User.js";
+import { formatCurrency } from "../utility.js";
 
 export default {
   event: Events.MessageCreate,
@@ -27,7 +28,9 @@ export default {
       .setColor(color.PASTELL_GREEN)
       .setTitle(`${emoji.EXCLAMATION} Nice!`)
       .setDescription(
-        `Durch deinen Beitrag von Medienschrott hast du **${AMOUNT}**🥝 verdient!`
+        `Durch deinen Beitrag von Medienschrott hast du ${formatCurrency(
+          AMOUNT
+        )} verdient!`
       );
 
     const msg = await message.reply({

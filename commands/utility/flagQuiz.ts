@@ -12,6 +12,7 @@ import {
 } from "discord.js";
 import { color, emoji } from "../../constants.js";
 import User from "../../db/schema/User.js";
+import { formatCurrency } from "../../utility.js";
 
 export default {
   name: "flag",
@@ -90,7 +91,7 @@ export default {
           .setColor(color.PASTELL_GREEN)
           .setTitle("Richtig!")
           .setDescription(
-            `Du hast die Flagge richtig erraten und dafür **${AMOUNT}**🥝 verdient!`
+            `Du hast die Flagge richtig erraten und dafür ${formatCurrency(AMOUNT)} verdient!`
           );
 
         msg.reply({

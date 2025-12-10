@@ -6,6 +6,7 @@ import {
 import User from "../../db/schema/User.js";
 import { color, emoji } from "../../constants.js";
 import { format } from "date-fns";
+import { formatCurrency } from "../../utility.js";
 
 export default {
   name: "balance",
@@ -29,8 +30,10 @@ export default {
       : "Kontostand";
 
     const embedDescription = optionUser?.user
-      ? `${optionUser?.user?.displayName}'s Kontostand beträgt **${user?.balance}**🥝`
-      : `Dein Kontostand beträgt **${user?.balance}**🥝`;
+      ? `${optionUser?.user?.displayName}'s Kontostand beträgt ${formatCurrency(
+          user?.balance
+        )}`
+      : `Dein Kontostand beträgt ${formatCurrency(user?.balance)}`;
 
     const embed = new EmbedBuilder()
       .setColor(color.PASTELL_GREEN)
