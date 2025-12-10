@@ -27,4 +27,4 @@ export default {
       components: [text, row],
     });
   },
-} as Command;
+} as ICommand;

@@ -42,4 +42,4 @@ export default {
       embeds: [embed],
     });
   },
-} as Command;
+} as ICommand;

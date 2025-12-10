@@ -18,7 +18,7 @@ const __dirname = path.dirname(__filename);
 export default class CommandHandler {
   private foldersPath;
   private commandFolders;
-  private commands: Command[];
+  private commands: ICommand[];
   private rest;
   private applicationId;
   private guildId;
@@ -135,11 +135,11 @@ export default class CommandHandler {
     }
   }
 
-  private parseCommand(command: Command) {
+  private parseCommand(command: ICommand) {
     return {
       name: command.name.toLowerCase(),
       description: command.description,
-      options: command.options?.map((opt) => ({
+      options: command.options?.map((opt: Option) => ({
         name: opt.name.toLowerCase(),
         description: opt.description,
         type: opt.type,

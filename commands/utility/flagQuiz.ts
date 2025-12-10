@@ -132,4 +132,4 @@ export default {
     };
     startRound(true);
   },
-} as Command;
+} as ICommand;
