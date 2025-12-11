@@ -1,6 +1,13 @@
 import {
+  ButtonBuilder,
+  ButtonStyle,
+  ContainerBuilder,
   EmbedBuilder,
+  MessageFlags,
   PermissionsBitField,
+  SectionBuilder,
+  SeparatorSpacingSize,
+  TextDisplayBuilder,
   type CommandInteraction,
 } from "discord.js";
 import { color, emoji, ITEMS } from "../../constants.js";
@@ -11,23 +18,48 @@ export default {
   description: "Ruft den Shop auf",
   permissions: PermissionsBitField.Flags.Administrator,
   callback: async (interaction: CommandInteraction) => {
-    const embed = new EmbedBuilder()
-      .setColor(color.PASTELL_GREEN)
-      .setTitle("Shop");
+    const container = new ContainerBuilder();
+
+    const title = new TextDisplayBuilder().setContent("## Shop");
+
+    container.addTextDisplayComponents(title);
 
     for (const item of ITEMS) {
-      embed.addFields({
-        name: `${emoji.DOT} ${item.name}`,
-        value: ` ${item.description}\n${emoji.LINE_1}${emoji.LINE_2}${
-          emoji.LINE_2
-        }${emoji.LINE_2}${emoji.LINE_2}${emoji.LINE_2}${emoji.LINE_2}${
-          emoji.LINE_2
-        }${emoji.LINE_3}
-        Preis: ${formatCurrency(item.price)}\nID: \`${item.name
-          .toLowerCase()
-          .replace(" ", "_")}\``,
-      });
+      const itemText = new TextDisplayBuilder().setContent(
+        [`### ${emoji.DOT} ${item.name}`, `${item.description}`].join("\n")
+      );
+
+      const buyButton = new ButtonBuilder()
+        .setLabel(new Intl.NumberFormat("en-US").format(item.price))
+        .setStyle(ButtonStyle.Secondary)
+        .setEmoji("🥝")
+        .setCustomId(
+          `shop_buy_button:${item.name.toLowerCase().replace(" ", "_")}`
+        );
+
+      const section = new SectionBuilder()
+        .addTextDisplayComponents(itemText)
+        .setButtonAccessory(buyButton);
+
+      container.addSectionComponents(section);
+      container.addSeparatorComponents((separator) =>
+        separator.setSpacing(SeparatorSpacingSize.Large)
+      );
     }
-    await interaction.reply({ embeds: [embed] });
+
+    const inventoryButton = new ButtonBuilder()
+      .setCustomId("open_inventory")
+      .setLabel("Inventar ansehen")
+      .setStyle(ButtonStyle.Secondary)
+      .setEmoji("<a:19dollar_fortnite_card:864140214734028800>");
+
+    container.addActionRowComponents((row) =>
+      row.addComponents(inventoryButton)
+    );
+
+    await interaction.reply({
+      flags: MessageFlags.IsComponentsV2,
+      components: [container],
+    });
   },
 } as ICommand;

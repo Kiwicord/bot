@@ -34,10 +34,4 @@ export const ITEMS: Item[] = [
     description: "Der Kiwipass ist eine Art VIP Mitgliedschaft des Servers",
     type: "VIP",
   },
-  {
-    name: "Among us pass",
-    price: 676767,
-    description: "buy among us",
-    type: "VIP",
-  },
 ];
