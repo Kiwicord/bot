@@ -1,2 +1,2 @@
-export const formatCurrency = (amt: number | undefined) =>
-  amt ? `**${new Intl.NumberFormat("en-US").format(amt)}🥝**` : amt;
+export const formatCurrency = (amt: any) =>
+  `**${new Intl.NumberFormat("en-US").format(amt)}🥝**`;
