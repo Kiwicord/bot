@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { Client, Events, GatewayIntentBits, Partials } from "discord.js";
 import CommandHandler from "./command-handler.js";
 import connectDB from "./db/connectDB.js";
 import User from "./db/schema/User.js";
@@ -10,7 +10,9 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
   ],
+  partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
 const token = process.env.BOT_TOKEN!;
