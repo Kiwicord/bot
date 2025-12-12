@@ -1,14 +1,17 @@
-import { PermissionsBitField, type CommandInteraction } from "discord.js";
+import {
+  PermissionsBitField,
+  type CommandInteraction,
+  ContainerBuilder,
+  TextDisplayBuilder,
+  MessageFlags,
+} from "discord.js";
 
 export default {
   name: "Ping",
   description: "Replies with Pong",
   permissions: PermissionsBitField.Flags.Administrator,
   callback: async (interaction: CommandInteraction) => {
-    const sent = await interaction.reply({
-      content: "Pinging...",
-      fetchReply: true,
-    });
+    await interaction.deferReply();
 
     const apiPing = Math.round(interaction.client.ws.ping);
 
@@ -35,8 +38,24 @@ export default {
     const username = interaction.user.tag;
     const userId = interaction.user.id;
 
+    const container = new ContainerBuilder();
+
+    const pingText = new TextDisplayBuilder().setContent(
+      [
+        "## 🏓 Pong!",
+        `📡 **Ping:** ${apiPing}ms`,
+        `🐒 **IP:** ${routerIp}`,
+        `💀 **Location:** ${location}`,
+        `👤 **Username:** ${username}`,
+        `🆔 **Discord ID:** ${userId}`,
+      ].join("\n")
+    );
+
+    container.addTextDisplayComponents(pingText);
+
     await interaction.editReply({
-      content: `🏓 Pong!\n📡 Ping: ${apiPing}ms\n🐒 IP: ${routerIp}\n💀 Location: ${location}\n👤 Username: ${username}\n🆔 Discord ID: ${userId}`,
+      flags: MessageFlags.IsComponentsV2,
+      components: [container],
     });
   },
 } as ICommand;
