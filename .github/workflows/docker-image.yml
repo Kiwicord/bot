@@ -24,3 +24,14 @@ jobs:
         file: Dockerfile
         push: true
         tags: prigolik/kiwicord-bot:latest
+
+    - name: Deploy on remote server (SSH)
+      uses: appleboy/ssh-action@v1.1.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: 22
+        script: |
+          cd ${{ secrets.DOCKER_PATH }}
+          docker compose up --pull always -d
