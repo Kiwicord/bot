@@ -16,5 +16,5 @@ interface ICommand {
 interface IEvent {
   event: Events;
   once: boolean;
-  callback: (event: Interaction, listener: (...args: any) => void) => void;
+  callback: (...args: any) => void;
 }
