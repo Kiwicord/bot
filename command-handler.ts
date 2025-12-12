@@ -69,13 +69,10 @@ export default class CommandHandler {
     }
 
     const eventsPath = path.join(__dirname, "events");
-    const eventFiles = fs
-      .readdirSync(eventsPath)
-      .filter((file) => file.endsWith(".ts") || file.endsWith(".js"));
+    const eventFiles = this.getAllEventFiles(eventsPath);
 
     for (const file of eventFiles) {
-      const filePath = path.join(eventsPath, file);
-      const eventModule = await import(pathToFileURL(filePath).href);
+      const eventModule = await import(pathToFileURL(file).href);
       const event = eventModule.default;
       if (event.once) {
         this.client.once(
@@ -149,5 +146,23 @@ export default class CommandHandler {
         ? command.permissions.toString()
         : null,
     };
+  }
+
+  private getAllEventFiles(dir: string): string[] {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+    let files: string[] = [];
+
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+
+      if (entry.isDirectory()) {
+        files = files.concat(this.getAllEventFiles(fullPath));
+      } else if (entry.name.endsWith(".ts") || entry.name.endsWith(".js")) {
+        files.push(fullPath);
+      }
+    }
+
+    return files;
   }
 }
