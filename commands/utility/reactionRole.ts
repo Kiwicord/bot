@@ -3,7 +3,6 @@ import {
   ChatInputCommandInteraction,
   PermissionsBitField,
   TextChannel,
-  type GuildBasedChannel,
 } from "discord.js";
 import ReactionRole from "../../db/schema/ReactionRole.js";
 

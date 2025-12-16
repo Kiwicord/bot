@@ -26,6 +26,10 @@ export const channel = {
   KIWI_CHURCH: "934860620745015296",
 };
 
+export const role = {
+  VERFIY_REQUIRED: "900735723840356362",
+};
+
 // temporary
 export const ITEMS: Item[] = [
   {
